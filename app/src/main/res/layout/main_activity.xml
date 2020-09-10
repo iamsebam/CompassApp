@@ -8,6 +8,16 @@
   android:layout_height="match_parent"
   tools:context=".view.MainActivity">
   
+  <com.sebastianmatyjaszczyk.compass.view.CompassView
+    android:id="@+id/compassView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toTopOf="@id/azimuthTextView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:layout_margin="20dp" />
+  
   <TextView
     android:id="@+id/azimuthTextView"
     android:layout_width="wrap_content"
@@ -18,7 +28,7 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/compassView"
     tools:text="Azimuth" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

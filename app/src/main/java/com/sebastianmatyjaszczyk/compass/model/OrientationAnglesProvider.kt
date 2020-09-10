@@ -7,7 +7,8 @@ import android.hardware.SensorManager
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import javax.inject.Inject
 
-class SensorDataProvider @Inject constructor(
+// TODO maybe create and implement an interface here, in case using another provider like rotating vector matrix
+class OrientationAnglesProvider @Inject constructor(
     private val sensorManager: SensorManager
 ) : SensorEventListener {
 
@@ -17,16 +18,13 @@ class SensorDataProvider @Inject constructor(
     private val rotationMatrix = FloatArray(9)
     private val orientationAngles = FloatArray(3)
 
-    private var azimuth = 0
-        set (value) { azimuthSubject.onNext(value) }
-
-    val azimuthSubject: BehaviorSubject<Int> = BehaviorSubject.createDefault(0)
+    val orientationAnglesSubject: BehaviorSubject<OrientationAnglesEntity> = BehaviorSubject.createDefault(OrientationAnglesEntity(0, 0, 0))
 
     init {
         registerListener()
     }
 
-    fun registerListener() {
+    private fun registerListener() {
         sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD).also { magneticFieldSensor ->
             sensorManager.registerListener(this, magneticFieldSensor, SensorManager.SENSOR_DELAY_UI, SensorManager.SENSOR_DELAY_UI)
         }
@@ -39,10 +37,23 @@ class SensorDataProvider @Inject constructor(
         sensorManager.unregisterListener(this)
     }
 
+    // TODO: Extract calculations to another class
     private fun calculateAzimuth(): Int {
         SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerReading, magnetometerReading)
         val azimuth = SensorManager.getOrientation(rotationMatrix, orientationAngles)[0]
-        val degrees = (Math.toDegrees(azimuth.toDouble()) + 360.0) % 360.0
+        val degrees = (Math.toDegrees(azimuth.toDouble()) + 360) % 360
+        return degrees.toInt()
+    }
+
+    private fun calculatePitch(): Int {
+        val pitch = orientationAngles[1]
+        val degrees = Math.toDegrees(pitch.toDouble()) % 180
+        return degrees.toInt()
+    }
+
+    private fun calculateRoll(): Int {
+        val roll = orientationAngles[2]
+        val degrees = Math.toDegrees(roll.toDouble()) % 90
         return degrees.toInt()
     }
 
@@ -53,7 +64,13 @@ class SensorDataProvider @Inject constructor(
                 Sensor.TYPE_MAGNETIC_FIELD -> System.arraycopy(values, 0, magnetometerReading, 0, magnetometerReading.size)
             }
         } ?: return
-        azimuth = calculateAzimuth()
+        orientationAnglesSubject.onNext(
+            OrientationAnglesEntity(
+                calculateAzimuth(),
+                calculatePitch(),
+                calculateRoll()
+            )
+        )
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
