@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="colorPrimary">#258EFF</color>
-  <color name="colorPrimaryDark">#114986</color>
-  <color name="colorAccent">#FFFFFF</color>
-  <color name="statusBarColor">#258EFF</color>
+  <color name="green">#375E37</color>
+  <color name="dark_green">#213821</color>
+  <color name="red">#BF1313</color>
+  <color name="white">#F0EEDF</color>
+  
+  <color name="colorPrimary">@color/green</color>
+  <color name="colorPrimaryDark">@color/dark_green</color>
+  <color name="colorAccent">@color/white</color>
+  <color name="statusBarColor">@color/green</color>
+  <color name="decorationRoseColor">@color/dark_green</color>
+  <color name="compassDiscColor">@color/white</color>
+  <color name="northLetterColor">@color/red</color>
+  <color name="directionLetterColor">@color/dark_green</color>
+  <color name="markersN30Color">@color/red</color>
+  <color name="markersN2Color">@color/dark_green</color>
 </resources>

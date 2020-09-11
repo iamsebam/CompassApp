@@ -1,4 +1,4 @@
-package com.sebastianmatyjaszczyk.compass.view.main
+package com.sebastianmatyjaszczyk.compass.view
 
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
@@ -10,9 +10,10 @@ import com.sebastianmatyjaszczyk.compass.repository.SensorDataRepository
 
 class MainViewModel
 @ViewModelInject constructor(
-    private val sensorDataRepository: SensorDataRepository,
-    @Assisted private val savedStateHandle: SavedStateHandle
+    sensorDataRepository: SensorDataRepository,
+    @Assisted savedStateHandle: SavedStateHandle
 ) : ViewModel(), LifecycleObserver {
-    val orientationAnglesLiveData = LiveDataReactiveStreams.fromPublisher(sensorDataRepository.orientationAngles)
+
+    val azimuthLiveData = LiveDataReactiveStreams.fromPublisher(sensorDataRepository.orientationAngles)
 
 }
