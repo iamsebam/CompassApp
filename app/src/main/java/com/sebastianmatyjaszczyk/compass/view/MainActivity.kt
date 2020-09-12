@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateView(azimuth: Float) {
-        compassView.azimuth = azimuth
-        azimuthTextView.text = String.format(azimuth.toInt().toString() + getString(R.string.degree))
+        compassView.onAzimuthChanged(azimuth)
+        azimuthTextView.text = getString(R.string.azimuth, azimuth.toInt())
     }
 }

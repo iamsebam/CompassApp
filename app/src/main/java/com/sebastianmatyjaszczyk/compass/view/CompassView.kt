@@ -13,25 +13,11 @@ import android.view.animation.RotateAnimation
 import androidx.core.content.ContextCompat
 import com.sebastianmatyjaszczyk.compass.R
 
+interface AzimuthChangedListener {
+    fun onAzimuthChanged(azimuth: Float)
+}
 
-class CompassView(context: Context, attrs: AttributeSet) : View(context, attrs) {
-
-    var azimuth: Float = 0f
-        set(newAzimuth) {
-            field = newAzimuth
-            val animation = RotateAnimation(
-                -currentAzimuth,
-                -field,
-                Animation.RELATIVE_TO_SELF,
-                0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f
-            ).apply {
-                fillAfter = true
-            }
-            currentAzimuth = newAzimuth
-            startAnimation(animation)
-        }
+class CompassView(context: Context, attrs: AttributeSet) : View(context, attrs), AzimuthChangedListener {
 
     private val rect by lazy { RectF(0F, 0F, measuredWidth.toFloat(), measuredWidth.toFloat()) }
 
@@ -42,6 +28,21 @@ class CompassView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     }
 
     private var currentAzimuth = 0f
+
+    override fun onAzimuthChanged(azimuth: Float) {
+        RotateAnimation(
+            -currentAzimuth,
+            -azimuth,
+            Animation.RELATIVE_TO_SELF,
+            0.5f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f
+        ).apply {
+            fillAfter = true
+            startAnimation(this)
+        }
+        currentAzimuth = azimuth
+    }
 
     private val directionLetterPaint = Paint(ANTI_ALIAS_FLAG).apply {
         color = ContextCompat.getColor(context, R.color.directionLetterColor)
